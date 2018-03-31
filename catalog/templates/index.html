@@ -1,0 +1,109 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>מערכת רישום תושבים/לקוחות</h1>
+
+<p>ברוכים הבאים למערכת ממוחשבת לרישום תושבים/לקוחות.</p>
+<p>לתמיכה טכנית, צור קשר:  000-0000000</p>
+
+<div>
+{% load static %}
+<img src="{% static "images/logo.png" %}" alt="My image" style="width:452px;height:246px;"/>
+</div>
+
+<br>
+
+<hr style="height: 1px; width: 99%; margin:0 auto;line-height:1px;background-color: #848484"; border:0 none; />
+
+<h2>נתונים כלליים</h2>
+
+<ul>
+<li><strong>תושבים רשומים:</strong> {{ num_persons }}</li>
+<li><strong>גברים:</strong> {{ num_males }}</li>
+<li><strong>נשים:</strong> {{ num_females }}</li>
+<li><strong>מספר כניסות למערכת: </strong>{{ num_visits }}</li>
+</ul>
+
+<br>
+
+<hr style="height: 1px; width: 99%; margin:0 auto;line-height:1px;background-color: #848484"; border:0 none; />
+
+<h2>הודעות מערכת</h2>
+
+<p>אין הודעות חדשות</p>
+
+<br>
+
+<hr style="height: 1px; width: 99%; margin:0 auto;line-height:1px;background-color: #848484"; border:0 none; />
+
+<br>
+
+<script type = "text/javascript">
+
+    var days = 730; // days until cookie expires = 2 years.
+    var lastvisit=new Object();
+    var firstvisitmsg="זהו ביקורך הראשון במערכת, ברוכים הבאים";
+    lastvisit.subsequentvisitmsg="ברוכים השבים!ֿ,<br> כניסה אחרונה למערכת נרשמה ב: <b>[displaydate]</b>";
+
+    lastvisit.getCookie=function(Name){
+        var re=new RegExp(Name+"=[^;]+", "i");
+        if (document.cookie.match(re))
+            return document.cookie.match(re)[0].split("=")[1];
+        return'';
+    }
+
+    lastvisit.setCookie=function(name, value, days){
+        var expireDate = new Date();
+
+        var expstring=expireDate.setDate(expireDate.getDate()+parseInt(days));
+        document.cookie = name+"="+value+"; expires="+expireDate.toGMTString()+"; path=/";
+    }
+
+    lastvisit.showmessage = function() {
+        var wh = new Date();
+        if (lastvisit.getCookie("visitc") == "") {
+            lastvisit.setCookie("visitc", wh, days);
+            document.write(firstvisitmsg);
+        }
+
+        else {
+            var lv = lastvisit.getCookie("visitc");
+            var lvp = Date.parse(lv);
+            var now = new Date();
+            now.setTime(lvp);
+            var day = new Array("ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת");
+            var month = new Array ("ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר");
+            var dd = now.getDate();
+            var dy = now.getDay();
+            dy = day[dy];
+            var mn = now.getMonth();
+            mn = month[mn];
+            yy = now.getFullYear();
+            var hh = now.getHours();
+            var ampm = "AM";
+            if (hh >= 12) {ampm = "PM"}
+            if (hh >12){hh = hh - 12};
+            if (hh == 0) {hh = 12}
+            if (hh < 10) {hh = "0" + hh};
+            var mins = now.getMinutes();
+            if (mins < 10) {mins = "0"+ mins}
+                var secs = now.getSeconds();
+            if (secs < 10) {secs = "0" + secs}
+                var dispDate = "יום " + dy + ", " + mn + " " + dd + ", " + yy + ", בשעה " +  hh + ":" + mins + ":" + secs + " " + ampm
+            document.write(lastvisit.subsequentvisitmsg.replace("\[displaydate\]", dispDate))
+        }
+
+        lastvisit.setCookie("visitc", wh, days);
+    }
+
+    lastvisit.showmessage();
+
+    window.onload = function() {
+        //when the document is finished loading, replace everything
+        //between the <a ...> </a> tags with the value of splitText
+        document.getElementById("myLink").innerHTML=dispDate;
+    }
+
+</script>
+
+{% endblock %}

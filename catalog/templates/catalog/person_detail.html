@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>{{ person.last_name }} {{ person.first_name }}</h1>
+
+<p><strong>תעודת זהות:</strong> {{ person.id_num }}</p>
+<p><strong>שם משפחה:</strong> {{ person.last_name }}</p>
+<p><strong>שם פרטי:</strong> {{ person.first_name }}</p>
+<p><strong>מין:</strong> {{ person.get_gender }}</p>
+<p><strong>תאריך לידה:</strong> {{ person.date_of_birth }}</p>
+<p><strong>גיל:</strong> {{ person.age }}</p>
+<p><strong>כתובת:</strong> {{ person.address }}</p>
+<p><strong>עיר:</strong> {{ person.city }}</p>
+<p><strong>טלפון1:</strong> {{ person.phone1 }}</p>
+<p><strong>טלפון2:</strong> {{ person.phone2 }}</p>
+<p><strong>טלפון3:</strong> {{ person.phone3 }}</p>
+<p><strong>הערות:</strong> {{ person.notes }}</p>
+
+<hr>
+
+<h3>שליחת מסרון SMS</h3>
+<form action="{% url 'persons_sendsms' %}" method="get">
+    <label>מספר נמען </label>
+    <br>
+    <select NAME=number>
+    <OPTION>{{ person.phone1 }}</OPTION>
+    <OPTION>{{ person.phone2 }}</OPTION>
+    <OPTION>{{ person.phone3 }}</OPTION>
+    </select>
+    <br>
+    <label>הודעה</label>
+    <br>
+    <TEXTAREA name="message" rows="10" cols="50"></TEXTAREA>
+    <br>
+    <input type="submit" value="שלח" />
+</form>
+
+{% endblock %}
